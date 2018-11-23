@@ -196,3 +196,13 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+/* Authors */
+.authors {
+  list-style: none;
+  padding: 0;
+}
+
+.authors li {
+  padding: 0;
+}
