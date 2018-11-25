@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from '../BooksAPI';
-// import escapeRegExp from 'escape-string-regexp';
 
 class SearchPage extends Component {
 
@@ -15,15 +14,6 @@ class SearchPage extends Component {
     };
   }
 
-  retBooks = [];
-
-  // state = {
-  //   query: '',
-  //   /*books: this.props.books*/
-  //   queryBooks: [],
-  //   updatedBooks: []
-  // };
-
   updateQuery = (event) => {
     const query = event.target.value.trim();
     this.setState({
@@ -33,9 +23,7 @@ class SearchPage extends Component {
 
   setupShelf(bookResults) {
     const { books } = this.state;
-    console.log('this.state.books ', books);
     let results = bookResults.slice();
-    console.log('query results ', results);
 
     results.forEach((result, i, array) => {
       if (books.length > 0) {
@@ -55,7 +43,6 @@ class SearchPage extends Component {
     BooksAPI.search(query)
     .then(response => {
         if (response) {
-          console.log('response ', response);
           const queryBooks = this.setupShelf(response);
           this.setState({
             queryBooks: queryBooks
@@ -69,7 +56,7 @@ class SearchPage extends Component {
 
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('newState ', this.state.queryBooks);
+    // console.log('newState ', this.state.queryBooks);
     if (prevState && prevState.query !== this.state.query) {
       this.querySearch();
     }
@@ -79,7 +66,6 @@ class SearchPage extends Component {
     if (this.state.updatedBooks) {
       const updatedClone = this.state.updatedBooks.slice();
       const found = updatedClone.find((element) => element === book);
-      console.log('found? ', found);
     }
 
     const changedBook = book;
@@ -98,66 +84,25 @@ class SearchPage extends Component {
     BooksAPI.update(book, event.value)
     .then(res => console.log(res))
     .catch(err => console.log(err));
-
-    /*
-    let copyOfRetrieved;
-
-    let ind = this.state.books.findIndex((retrievedBook) => retrievedBook.id === book.id);
-    
-    if (ind > -1) {
-      copyOfRetrieved = this.state.books.slice();
-      copyOfRetrieved[ind].shelf = val;
-
-      this.setState({
-        books: copyOfRetrieved
-      });
-
-    } else {
-
-      book['shelf'] = val;
-      this.setState(state => ({
-        books: state.books.concat([ book ])
-      }));
-    }
-
-    // update displayed books
-    this.retBooks.forEach((retBook, ind, arr) => {
-      if (book.id === retBook.id) {
-        arr[ind].shelf = val;
-      }
-    });
-
-    BooksAPI.update(book, val)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
-    */  
   }
 
-  blah = () => {
-    this.props.newState(this.state.queryBooks);
-  }
+  // blah = () => {
+  //   this.props.newState(this.state.queryBooks)
+  // }
 
   render() {
     const { queryBooks } = this.state;
-    /*
-    let books;
-    const { query } = this.state;
-
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), 'i');
-      books = this.retBooks.filter((book) => match.test(book.title) || match.test(book.authors));
-    } else {
-      books = [];
-    }*/
-
-    const refCallback = node => {
-      console.log('node ', node);
-    }
 
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          <Link to="/" innerRef={refCallback} className="close-search">Close</Link>
+          {/* <Link to={{
+            pathname: '/',
+            state: {
+              queryBooks: this.state.queryBooks
+            }
+          }} className="close-search">Close</Link> */}
+          <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
             {/*
               NOTES: The search from BooksAPI is limited to a particular set of search terms.
