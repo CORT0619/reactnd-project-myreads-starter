@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from '../BooksAPI';
+import { createBrowserHistory } from 'history';
 
 class SearchPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      books: props.books,
+      books: [],
       query: '',
       queryBooks: [],
       updatedBooks: []
@@ -56,10 +57,17 @@ class SearchPage extends Component {
 
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('newState ', this.state.queryBooks);
     if (prevState && prevState.query !== this.state.query) {
       this.querySearch();
     }
+  }
+
+  componentWillMount() {
+    const history = createBrowserHistory();
+    const location = history.location;
+    this.setState({
+      books: location.state.booksOnShelf
+    });
   }
  
   updateBook = (book, event) => {
@@ -86,22 +94,12 @@ class SearchPage extends Component {
     .catch(err => console.log(err));
   }
 
-  // blah = () => {
-  //   this.props.newState(this.state.queryBooks)
-  // }
-
   render() {
     const { queryBooks } = this.state;
 
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          {/* <Link to={{
-            pathname: '/',
-            state: {
-              queryBooks: this.state.queryBooks
-            }
-          }} className="close-search">Close</Link> */}
           <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
             {/*
@@ -125,7 +123,6 @@ class SearchPage extends Component {
                     <div className="book-top">
                       <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${book.imageLinks && book.imageLinks.thumbnail ? book.imageLinks.thumbnail: `http://via.placeholder.com/128x193?text=No%20Cover`})` }}></div>
                       <div className="book-shelf-changer">
-                        {/* <select onChange={this.updateBook} value={book.shelf || 'none'}> */}
                         <select onChange={(event) => this.updateBook(book, event.target)} value={book.shelf || 'none'}>
                           <option value="move" disabled>Move to...</option>
                           <option value="currentlyReading">Currently Reading</option>
@@ -138,7 +135,7 @@ class SearchPage extends Component {
                     <div className="book-title">{book.title}</div>
                     <div className="book-authors">
                       <ul className="authors">
-                        {book.authors.map((author, indx) => (
+                        {book.authors && book.authors.map((author, indx) => (
                           <li key={indx}>{author}</li>
                         ))}
                       </ul>

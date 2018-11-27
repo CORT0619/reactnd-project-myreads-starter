@@ -12,28 +12,16 @@ class BooksApp extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    console.log('this.state ', this.state);
-  }
-
-  setNewState = (childState) => {
-    console.log('childState ', childState);
-    this.setState({
-      retrievedBooks: childState
-    });
-  }
-
   render() {
-    const { retrievedBooks } = this.state;
-
     return (
       <div className="app">
         <Route exact path="/search" render={() => (
-          <SearchPage books={retrievedBooks} 
-                      newState={this.setNewState} />
+          <SearchPage />
         )}/>
 
-        <Route exact path="/" component={Shelf}/>
+        <Route exact path="/" render={() => (
+          <Shelf books={this.state.retrievedBooks} />
+        )} />
       </div>
     )
   }

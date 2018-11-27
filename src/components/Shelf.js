@@ -32,7 +32,6 @@ class Shelf extends Component {
   updateBook = (book, event) => {
     BooksAPI.update(book, event.value)
     .then(res => {
-      console.log(res);
       this.setState(state => ({
         state: state.booksOnShelf.concat([book]) 
       }));
@@ -155,7 +154,12 @@ class Shelf extends Component {
           </div>
         </div>
         <div className="open-search">
-          <Link to="/search">
+          <Link to={{
+            pathname: '/search',
+            state: {
+              booksOnShelf: this.state.booksOnShelf
+            }
+          }}>
             <button>Add a book</button>
           </Link>
         </div>
